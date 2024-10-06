@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "locale.h": "c",
+        "wchar.h": "c",
+        "filter_text.h": "c"
+    }
+}
