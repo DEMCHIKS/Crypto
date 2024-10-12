@@ -5,8 +5,11 @@
 #include "filter_text.h"
 #include "read_buffer.h"
 #include "calculateFREQ.h"
+#include "dict.h"
 
 #define MAX_TEXT_SIZE 1000000 // Максимальний розмір тексту (можна змінити за потребою)
+
+wchar_t ALPHABET[] = L" абвгдежзийклмнопрстуфхцчшщыьэюя";
 
 int main() {
     if (setlocale(LC_ALL, "ru_RU.utf8") == NULL) {
@@ -14,23 +17,29 @@ int main() {
         return 1;
     }
 
-    // // Тестова стрічка
+    // Тестова стрічка
     wchar_t str[] = L"есть тексты на русском языке";
-    
-    wprintf(L"Аналіз тестової стрічки: \"%ls\"\n\n", str);
+    Dict *dict;
+    dict = Dict_INIT(ALPHABET);
 
-    monogram_with_space(str);
-    wprintf(L"\n");
-    monogram_without_space(str);
-    wprintf(L"\n");
-    bigram_step1_with_space(str);
-    wprintf(L"\n");
-    bigram_step1_without_space(str);
-    wprintf(L"\n");
-    bigram_step2_with_space(str);
-    wprintf(L"\n");
-    bigram_step2_without_space(str);
-    wprintf(L"\n");
+    monogram(str, true, dict);
+    bigram(str, dict, true, 1);
+
+
+    // wprintf(L"Аналіз тестової стрічки: \"%ls\"\n\n", str);
+
+    // monogram_with_space(str);
+    // wprintf(L"\n");
+    // monogram_without_space(str);
+    // wprintf(L"\n");
+    // bigram_step1_with_space(str);
+    // wprintf(L"\n");
+    // bigram_step1_without_space(str);
+    // wprintf(L"\n");
+    // bigram_step2_with_space(str);
+    // wprintf(L"\n");
+    // bigram_step2_without_space(str);
+    // wprintf(L"\n");
 
     // const char *input_file = "TEXT.txt";
     // const char *filtered_file = "filtered.txt";

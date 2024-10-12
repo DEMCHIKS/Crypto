@@ -2,12 +2,16 @@
 #define CALCULATE_FREQ_H
 
 #include <wchar.h>
+#include "dict.h"
 
-void monogram_with_space(const wchar_t *text);
-void monogram_without_space(const wchar_t *text);
-void bigram_step1_with_space(const wchar_t *text);
-void bigram_step1_without_space(const wchar_t *text);
-void bigram_step2_with_space(const wchar_t *text);
-void bigram_step2_without_space(const wchar_t *text);
+enum e_type_of_gram {
+	MONOGRAM, BIGRAM, ALL
+}; 
+
+typedef enum e_type_of_gram TypeOfGram; 
+
+void print_results(Dict *dict, int total, TypeOfGram gram_type);
+void monogram(const wchar_t *input_text, bool include_space, Dict *dict);
+void bigram(const wchar_t *input_text, Dict *dict, bool include_space, int step);
 
 #endif 
