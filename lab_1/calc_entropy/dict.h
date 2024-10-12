@@ -1,3 +1,6 @@
+#ifndef DICT_H
+#define DICT_H
+
 #include <wchar.h>
 #include <stdbool.h>
 
@@ -51,7 +54,7 @@ bool Dict_is_full(Dict *dict);
 // Free memory from dictionary (including created wstrings) 
 void Dict_destroy(Dict *dict);
 
-
+// 
 // IDEA for saving number of occurences letters and bigrams with the dictionary
 // b1 = str[i];
 // b2 = str[i + 1];
@@ -62,7 +65,17 @@ void Dict_destroy(Dict *dict);
 // if (Dict_exists_entry(dict, bigr)) {
 //     int bigr_count = Dict_get_value(dict, bigr);
 //     Dict_insert_entry(dict, bigr, bigr_count + 1);
+//     free(bigr);
 // } else {
 //     Dict_insert_entry(dict, bigr, 1)
 // }
 //
+
+// create dict and fill it with monograms and bigramms
+// argument - string with all charactes of target alphabet
+Dict *Dict_INIT(wchar_t *alphabet);
+
+// increment value by key
+void Dict_inc_value(Dict *dict, wchar_t *key);
+
+#endif
