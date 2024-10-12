@@ -47,7 +47,6 @@ bool Dict_is_empty(Dict *dict);
 // Returns true if full and false otherwise
 bool Dict_is_full(Dict *dict);
 
-
 // Free memory from dictionary (including created wstrings) 
 void Dict_destroy(Dict *dict);
 
