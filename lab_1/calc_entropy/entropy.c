@@ -1,84 +1,127 @@
 #include <stdio.h>
 #include <math.h>
 #include <wchar.h>
-#include <stdbool.h>
-
-// COUNT_LETTER = 32 
-// 0 <= H <= log2(COUNT_LETTER) 
-// 0 <= H <= log2(32) <= 5
-
+#include "dict.h"
 
 #define COUNT_LETTER 32
 
-float H1_monogram_with_SPACE(int num_of_occur[COUNT_LETTER]) {
-    float accum = 0;
-    int total = 0; // використовується для підрахунку загальної кількості всіх біграм
-
-    // Calculate total occurrences
-    for (int i = 0; i < COUNT_LETTER; i++) {
-        total += num_of_occur[i];
-    }
-
-    // Calculate entropy
-    for (int i = 0; i < COUNT_LETTER; i++) {
-        if (num_of_occur[i] > 0) {
-            float P = (float)num_of_occur[i] / total;
-            accum += (-1/1) * (P * log2f(P));
+float calculate_entropy(Dict *dict, int total, int gram_size) {
+    float accum = 0.0f;
+    DictEntry dentry;
+    
+    for (int i = 0; i < dict->occupied; ++i) {
+        dentry = dict->dict_entries[i];
+        if (wcslen(dentry.key) == gram_size && dentry.value > 0) {
+            float P = (float)dentry.value / total;
+            accum += (-1.0f / gram_size) * (P * log2f(P));
         }
     }
-
+    
     return accum;
 }
 
-// float H1_monogram_without_SPACE(){
-
-// 	return result;
-// }
-
-float H2_bigram_with_SPACE_1(int num_of_occur[COUNT_LETTER][COUNT_LETTER]) {
-    float accum = 0;
-    int total = 0; // використовується для підрахунку загальної кількості всіх біграм
-
-    for (int i = 0; i < COUNT_LETTER; i++) {
-        for (int j = 0; j < COUNT_LETTER; j++) {
-            total += num_of_occur[i][j];
+float H1_monogram_with_SPACE(Dict *dict) {
+    int total = 0;
+    DictEntry dentry;
+    
+    for (int i = 0; i < dict->occupied; ++i) {
+        dentry = dict->dict_entries[i];
+        if (wcslen(dentry.key) == 1) {
+            total += dentry.value;
         }
     }
+    
+    return calculate_entropy(dict, total, 1);
+}
 
-    for (int i = 0; i < COUNT_LETTER; i++) {
-        for (int j = 0; j < COUNT_LETTER; j++) {
-            if (num_of_occur[i][j] > 0) {
-                float P = (float)num_of_occur[i][j] / total;
-                accum += (-1/2) * (P * log2f(P));
-            }
+float H1_monogram_without_SPACE(Dict *dict) {
+    int total = 0;
+    DictEntry dentry;
+    
+    for (int i = 0; i < dict->occupied; ++i) {
+        dentry = dict->dict_entries[i];
+        if (wcslen(dentry.key) == 1 && dentry.key[0] != L' ') {
+            total += dentry.value;
         }
     }
-    return accum;
+    
+    return calculate_entropy(dict, total, 1);
 }
 
-
-// float H2_bigram_without_SPACE_1(){
-
-// 	return result;
-// }
-
-
-// float H2_bigram_with_SPACE_2(){
-
-// 	return result;
-// }
-
-
-// float H2_bigram_without_SPACE_2(){
-
-// 	return result;
-// }
-
-
-int main() {
-
-	int occurrences[COUNT_LETTER] = {0}; 
-    float entropy = H1_monogram_with_SPACE(occurrences);
-    printf("H1 monogram with SPACE: %f\n", entropy);
-    return 0;
+float H2_bigram_with_SPACE(Dict *dict) {
+    int total = 0;
+    DictEntry dentry;
+    
+    for (int i = 0; i < dict->occupied; ++i) {
+        dentry = dict->dict_entries[i];
+        if (wcslen(dentry.key) == 2) {
+            total += dentry.value;
+        }
+    }
+    
+    return calculate_entropy(dict, total, 2);
 }
+
+float H2_bigram_without_SPACE(Dict *dict) {
+    int total = 0;
+    DictEntry dentry;
+    
+    for (int i = 0; i < dict->occupied; ++i) {
+        dentry = dict->dict_entries[i];
+        if (wcslen(dentry.key) == 2 && dentry.key[0] != L' ' && dentry.key[1] != L' ') {
+            total += dentry.value;
+        }
+    }
+    
+    return calculate_entropy(dict, total, 2);
+}
+
+float H2_bigram_with_SPACE_step2(Dict *dict) {
+    int total = 0;
+    DictEntry dentry;
+    
+    for (int i = 0; i < dict->occupied; ++i) {
+        dentry = dict->dict_entries[i];
+        if (wcslen(dentry.key) == 2) {
+            total += dentry.value;
+        }
+    }
+    
+    return calculate_entropy(dict, total, 2);
+}
+
+float H2_bigram_without_SPACE_step2(Dict *dict) {
+    int total = 0;
+    DictEntry dentry;
+    
+    for (int i = 0; i < dict->occupied; ++i) {
+        dentry = dict->dict_entries[i];
+        if (wcslen(dentry.key) == 2 && dentry.key[0] != L' ' && dentry.key[1] != L' ') {
+            total += dentry.value;
+        }
+    }
+    
+    return calculate_entropy(dict, total, 2);
+}
+
+// void calculate_and_print_entropies(Dict *dict) {
+//     printf("H1 монограма з пробілом: %f\n", H1_monogram_with_SPACE(dict));
+//     printf("H1 монограма без пробілу: %f\n", H1_monogram_without_SPACE(dict));
+//     printf("H2 біграма з кроком 1 з пробілом: %f\n", H2_bigram_with_SPACE(dict));
+//     printf("H2 біграма з кроком 1 без пробілу: %f\n", H2_bigram_without_SPACE(dict));
+//     printf("H2 біграма з кроком 2 з пробілом: %f\n", H2_bigram_with_SPACE_step2(dict));
+//     printf("H2 біграма з кроком 2 без пробілу: %f\n", H2_bigram_without_SPACE_step2(dict));
+// }
+
+// int main() {
+//     wchar_t *alphabet = L" абвгґдеєжзиіїйклмнопрстуфхцчшщьюя";
+//     Dict *dict = Dict_INIT(alphabet);
+    
+//     // Тут потрібно додати код для заповнення словника даними з тексту
+//     // Використовуйте модифіковані функції monogram() та bigram() з файлу calculateFREQ.c
+    
+//     calculate_and_print_entropies(dict);
+    
+//     Dict_destroy(dict);
+//     return 0;
+// }

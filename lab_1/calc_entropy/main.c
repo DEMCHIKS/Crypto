@@ -6,6 +6,7 @@
 #include "read_buffer.h"
 #include "calculateFREQ.h"
 #include "dict.h"
+#include "entropy.h"
 
 #define MAX_TEXT_SIZE 1000000 // Максимальний розмір тексту (можна змінити за потребою)
 
@@ -24,6 +25,13 @@ int main() {
 
     monogram(str, true, dict);
     bigram(str, dict, true, 1);
+    wprintf(L"H1 монограма з пробілом: %f\n", H1_monogram_with_SPACE(dict));
+    // printf("H1 монограма без пробілу: %f\n", H1_monogram_without_SPACE(dict));
+    wprintf(L"H2 біграма з кроком 1 з пробілом: %f\n", H2_bigram_with_SPACE(dict));
+    Dict_destroy(dict);
+    // printf("H2 біграма з кроком 1 без пробілу: %f\n", H2_bigram_without_SPACE(dict));
+    // printf("H2 біграма з кроком 2 з пробілом: %f\n", H2_bigram_with_SPACE_step2(dict));
+    // printf("H2 біграма з кроком 2 без пробілу: %f\n", H2_bigram_without_SPACE_step2(dict));
 
 
     // wprintf(L"Аналіз тестової стрічки: \"%ls\"\n\n", str);
