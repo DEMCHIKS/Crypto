@@ -67,11 +67,19 @@ int main() {
     size_t total_chars_read = 0;
     
     // // Читання тексту частинами по 1 кілобайту
+
+    ///////////////////////////
+    // make as function this piece of code
+    // wchar_t *get_text_from_file(const char *filename, int max_chars_read)
+    
+
+    FILE *file = fopen(filtered_file, "r");
+
     while (1) {
         wchar_t buffer[BUFFER_SIZE + 1];  // +1 for null terminator
         size_t chars_read;
 
-        if (!read_buffer_wide(filtered_file, buffer, &chars_read)) {
+        if (!read_buffer_wide(file, buffer, &chars_read)) {
             fwprintf(stderr, L"Error reading from filtered file\n");
             free(full_text);
             return 1;
@@ -91,26 +99,31 @@ int main() {
         }
     }
 
+    fclose(file);
+
     full_text[total_chars_read] = L'\0'; // Null-термінатор в кінці повного тексту
 
+    ////////////// end of function
+    //////////////////////////////
+    
     // full_text = L"  есть тексты на русском языкезыкезыке";
     
     // 1) number of monogram occurences sorted by descending
     
     // monorams with spaces
-    // monogram(full_text, true, dict);
-    // //Dict_sort_by_desc(dict);
-    // wprintf(L"Number of monogram occurences sorted by descending.\n");
-    // //print_results(dict, true, MONOGRAM);
-
-    // // 2) number of bigram occurences - print as square matrix
-    // // indexed by first and second letters of bigram
-    // bigram(full_text, dict, true, 1);
-    // wprintf(L"Number of bigram occurences sorted by descending.\n");
+    monogram(full_text, true, dict);
     //Dict_sort_by_desc(dict);
-    //print_results(dict, true, BIGRAM);
+    wprintf(L"Number of monogram occurences sorted by descending.\n");
+    //print_results(dict, true, MONOGRAM);
+
+    // 2) number of bigram occurences - print as square matrix
+    // indexed by first and second letters of bigram
+    bigram(full_text, dict, true, 1);
+    wprintf(L"Number of bigram occurences sorted by descending.\n");
+    // Dict_sort_by_desc(dict);
+    print_results(dict, true, BIGRAM);
     
-    //print_bigram_table();
+    // print_bigram_table();
 
     // 3-1)  h1 for monogram without spaces
     // 3-2)  h1 for monogram with space
@@ -125,12 +138,12 @@ int main() {
     // 6) freq bigram table - print as square matrix
     // indexed by first and second letters of bigram
     
-    // wprintf(L"Total characters read: %zu\n", total_chars_read);
-    // wprintf(L"Аналіз повного тексту:\n\n");
+    wprintf(L"Total characters read: %zu\n", total_chars_read);
+    wprintf(L"Аналіз повного тексту:\n\n");
     
     
     // Звільнення пам'яті
-    // free(full_text);
+    free(full_text);
     Dict_destroy(dict);
     
     return 0;

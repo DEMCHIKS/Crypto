@@ -70,9 +70,6 @@ int Dict_get_value(Dict *dict, wchar_t *key) {
 
     for (i = 0; i < dict->occupied; ++i) {
         dentry = Dict_get_entry_by_key(dict, key);
-        ////
-        assert(dentry != NULL);
-        /////
 
         if (NULL != dentry) {
             return dentry->value;
@@ -143,7 +140,6 @@ Dict *Dict_INIT(wchar_t *alphabet) {
 // increment value by key
 void Dict_inc_value(Dict *dict, wchar_t *key) {
     int val;
-    wprintf(L"%Ls\n", key);
 
     assert(Dict_exists_entry(dict, key));
     
