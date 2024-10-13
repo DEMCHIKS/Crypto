@@ -23,6 +23,12 @@ struct s_dict {
 
 typedef struct s_dict Dict;
 
+enum e_type_of_gram {
+	MONOGRAM, BIGRAM, ALL
+}; 
+
+typedef enum e_type_of_gram TypeOfGram; 
+
 
 // Create new dictionary: allocate memory for it
 // it uses calloc: fill allocated memory with zeros
@@ -53,22 +59,6 @@ bool Dict_is_full(Dict *dict);
 // Free memory from dictionary (including created wstrings) 
 void Dict_destroy(Dict *dict);
 
-// 
-// IDEA for saving number of occurences letters and bigrams with the dictionary
-// b1 = str[i];
-// b2 = str[i + 1];
-// wchar_t *bigr = malloc(sizeof(wchar_t) * (2 + 1))
-// bigr[2] = L'\0'
-// bigr[0] = b1
-// bigr[1] = b2
-// if (Dict_exists_entry(dict, bigr)) {
-//     int bigr_count = Dict_get_value(dict, bigr);
-//     Dict_insert_entry(dict, bigr, bigr_count + 1);
-//     free(bigr);
-// } else {
-//     Dict_insert_entry(dict, bigr, 1)
-// }
-//
 
 // create dict and fill it with monograms and bigramms
 // argument - string with all charactes of target alphabet
@@ -76,5 +66,10 @@ Dict *Dict_INIT(wchar_t *alphabet);
 
 // increment value by key
 void Dict_inc_value(Dict *dict, wchar_t *key);
+int Dict_calc_total(Dict *dict, TypeOfGram gram_type, bool include_space);
+
+
+// sort dictionary in decsending order
+void Dict_sort_by_desc(Dict *dict);
 
 #endif

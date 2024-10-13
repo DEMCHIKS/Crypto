@@ -17,6 +17,8 @@ bool read_buffer_wide(const char *filename, wchar_t *buffer, size_t *chars_read)
         (*chars_read)++;
     }
 
+    wprintf(L"%Ls\n", buffer);
+
     fclose(file);
     return true;
 }

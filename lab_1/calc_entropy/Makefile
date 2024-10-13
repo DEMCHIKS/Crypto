@@ -1,12 +1,20 @@
-CC=gcc
-CFLAGS=
+CC = gcc
+CFLAGS = -Wall -Wextra -g -O1
+LDFLAGS = -lm
+
+SRCS = main.c calculateFREQ.c dict.c entropy.c read_buffer.c filter_text.c
+OBJS = $(SRCS:.c=.o)
+TARGET = text_analyzer
 
 .PHONY: all clean
 
-all: calc_entropy
+all: $(TARGET)
 
-calc_entropy: main.c
-	$(CC) $(CFLAGS) $^ -o $@
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $<
 
 clean:
-	rm -f calc_entropy
+	rm -f $(OBJS) $(TARGET) #filter_text entropy_calculator

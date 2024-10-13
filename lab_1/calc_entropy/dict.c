@@ -7,7 +7,6 @@
 static DictEntry *Dict_get_entry_by_key(Dict *dict, wchar_t *key) {
     int i;
     wchar_t *dkey;
-    int key_len;
     
     for (i = 0; i < dict->occupied; ++i) {
         dkey = dict->dict_entries[i].key;
@@ -27,6 +26,8 @@ Dict *Dict_create(int size) {
     dict->dict_entries = (DictEntry *) calloc(size, sizeof(DictEntry));
     dict->size = size;
     dict->occupied = 0;
+
+    return dict;
 }
 
 
@@ -38,7 +39,6 @@ bool Dict_exists_entry(Dict *dict, wchar_t *key) {
 
 
 void Dict_insert_entry(Dict *dict, wchar_t *key, int value) {
-    int i;
     wchar_t *dkey;
     DictEntry *dentry;
     int key_len;
@@ -70,6 +70,10 @@ int Dict_get_value(Dict *dict, wchar_t *key) {
 
     for (i = 0; i < dict->occupied; ++i) {
         dentry = Dict_get_entry_by_key(dict, key);
+        ////
+        assert(dentry != NULL);
+        /////
+
         if (NULL != dentry) {
             return dentry->value;
         } else {
@@ -139,68 +143,46 @@ Dict *Dict_INIT(wchar_t *alphabet) {
 // increment value by key
 void Dict_inc_value(Dict *dict, wchar_t *key) {
     int val;
+    wprintf(L"%Ls\n", key);
+
     assert(Dict_exists_entry(dict, key));
     
     val = Dict_get_value(dict, key);
     Dict_insert_entry(dict, key, val + 1);
 }
 
+int Dict_calc_total(Dict *dict, TypeOfGram gram_type, bool include_space) {
+    DictEntry dentry;
+    int i;
+    int total;
+  
+    for (i = 0, total = 0; i < dict->occupied; ++i) {
+        dentry = dict->dict_entries[i];
 
-// int main() {
-//     Dict *dict;
-//     int i;
-//     DictEntry dentry;
-    // dict = Dict_create(5);
+        if (gram_type == MONOGRAM && wcslen(dentry.key) != 1) {
+            continue;
+        } else if (gram_type == BIGRAM && wcslen(dentry.key) != 2) {
+            continue;
+        }
 
-    // Dict_insert_entry(dict, L"hello", 10);
-    // Dict_insert_entry(dict, L"blabla2", 3);
-
-    // printf("entry 1: %d\n", Dict_get_value(dict, L"hello"));
-    // printf("entry 2: %d\n", Dict_get_value(dict, L"blabla2"));
-
-    // Dict_insert_entry(dict, L"hello", 1);
-    // Dict_insert_entry(dict, L"blabla2", 100);
-    // Dict_insert_entry(dict, L"blabla3", 20);
-    // Dict_insert_entry(dict, L"blabla4", 30);
-    // Dict_insert_entry(dict, L"blabla5", 40);
-
-    // printf("entry 1: %d\n", Dict_get_value(dict, L"hello"));
-    // printf("entry 2: %d\n", Dict_get_value(dict, L"blabla2"));
-    // printf("entry 3: %d\n", Dict_get_value(dict, L"blabla3"));
-    // printf("entry 4: %d\n", Dict_get_value(dict, L"blabla4"));
-    // printf("entry 5: %d\n", Dict_get_value(dict, L"blabla5"));
-
-//     dict = Dict_INIT(L" abcdefgh");
-//     for (i = 0; i < dict->occupied; ++i) {
-//         dentry = dict->dict_entries[i];
-//         wprintf(L"Key: [%ls]; Value: [%d]\n", dentry.key, dentry.value);
-//     }
-
-//     Dict_inc_value(dict, L"a");
-//     Dict_inc_value(dict, L"a");
-
-//     Dict_inc_value(dict, L"b");
+        if (!include_space && (wcschr(dentry.key, L' ') != NULL)) {
+            continue;
+        }
     
-//     Dict_inc_value(dict, L"c");
-//     Dict_inc_value(dict, L"c");
-//     Dict_inc_value(dict, L"c");
+        total += dentry.value;
+    }
 
-//     Dict_inc_value(dict, L"g");
+    return total;
+}
 
-//     Dict_inc_value(dict, L"a ");
-//     Dict_inc_value(dict, L"a ");
-//     Dict_inc_value(dict, L"gg");
-//     Dict_inc_value(dict, L"ab");
-//     Dict_inc_value(dict, L"ab");
-//     Dict_inc_value(dict, L"ab");
-//     Dict_inc_value(dict, L"ba");
-//     Dict_inc_value(dict, L"ba");
+static int cmp_dentries(const void *dentry_1, const void *dentry_2) {
+    DictEntry *de1, *de2;
+    de1 = (DictEntry *) dentry_1;
+    de2 = (DictEntry *) dentry_2;
 
-//     for (i = 0; i < dict->occupied; ++i) {
-//         dentry = dict->dict_entries[i];
-//         wprintf(L"Key: [%ls]; Value: [%d]\n", dentry.key, dentry.value);
-//     }
+    return de2->value - de1->value;
+}
 
-//     Dict_destroy(dict);
-//     return 0;
-// }
+void Dict_sort_by_desc(Dict *dict) {
+    qsort(dict->dict_entries, dict->occupied, sizeof(DictEntry), &cmp_dentries);
+}
