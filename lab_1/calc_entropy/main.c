@@ -218,13 +218,10 @@ int main() {
 
     // FREQ monograms without spaces
     wprintf(L"Frequencies of monograms sorted by descendig without spaces: \n");
-<<<<<<< HEAD
     print_results(dict, false, MONOGRAM);
     // ====
-=======
     print_monogram_seq(dict, ALPHABET + 1, FREQ);
     // print_results(dict, false, MONOGRAM);
->>>>>>> refs/remotes/origin/main
 
     // 6) freq bigram table - print as square matrix
     // indexed by first and second letters of bigram
