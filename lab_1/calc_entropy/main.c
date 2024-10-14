@@ -9,26 +9,19 @@
 #include "dict.h"
 #include "entropy.h"
 
-#define MAX_TEXT_SIZE 1000000 // Максимальний розмір тексту (можна змінити за потребою)
+// wchar_t ALPHABET[] = L" абвгдежзийклмнопрстуфхцчшщыьэюя";
 
-wchar_t ALPHABET[] = L" абвгдежзийклмнопрстуфхцчшщыьэюя";
+// void print_bigram_table(Dict ) {
 
-
-void print_bigram_table(Dict ) {
-
-}
+// }
 
 int main() {
-    if (setlocale(LC_ALL, "ru_RU.utf8") == NULL) {
-        fprintf(stderr, "Error: can't set locale\n");
-        return 1;
-    }
 
     // Тестова стрічка
     // wchar_t str[] = L"есть тексты на русском языке";
     
-    Dict *dict;
-    dict = Dict_INIT(ALPHABET);
+    // Dict *dict;
+    // dict = Dict_INIT(ALPHABET);
     // wchar_t key[3];
     // key[2] = L'\0';
 
@@ -46,7 +39,6 @@ int main() {
     // Dict_sort_by_desc(dict);
     // print_results(dict, true, ALL);
     
-
     const char *input_file = "TEXT.txt";
     const char *filtered_file = "filtered.txt";
     
@@ -56,72 +48,32 @@ int main() {
         return 1;
     }
 
-
-    // Підготовка буфера для всього тексту
-    wchar_t *full_text = malloc(sizeof(wchar_t) * MAX_TEXT_SIZE);
+    // Читання тексту частинами по 1 кілобайту
+    
+    wchar_t *full_text = get_text_from_file(filtered_file);
     if (full_text == NULL) {
-        fwprintf(stderr, L"Error allocating memory for full text\n");
+        fwprintf(stderr, L"Error: Failed to read text from file\n");
         return 1;
     }
-    
-    size_t total_chars_read = 0;
-    
-    // // Читання тексту частинами по 1 кілобайту
 
-    ///////////////////////////
-    // make as function this piece of code
-    // wchar_t *get_text_from_file(const char *filename, int max_chars_read)
-    
-
-    FILE *file = fopen(filtered_file, "r");
-
-    while (1) {
-        wchar_t buffer[BUFFER_SIZE + 1];  // +1 for null terminator
-        size_t chars_read;
-
-        if (!read_buffer_wide(file, buffer, &chars_read)) {
-            fwprintf(stderr, L"Error reading from filtered file\n");
-            free(full_text);
-            return 1;
-        }
-
-        if (chars_read == 0) {
-            break; // Досягнуто кінця файлу
-        }
-
-        // Копіювання прочитаного фрагменту в повний текст
-        if (total_chars_read + chars_read < MAX_TEXT_SIZE) {
-            wcsncpy(full_text + total_chars_read, buffer, chars_read);
-            total_chars_read += chars_read;
-        } else {
-            fwprintf(stderr, L"Warning: Text is too long, truncating\n");
-            break;
-        }
-    }
-
-    fclose(file);
-
-    full_text[total_chars_read] = L'\0'; // Null-термінатор в кінці повного тексту
-
-    ////////////// end of function
-    //////////////////////////////
-    
     // full_text = L"  есть тексты на русском языкезыкезыке";
-    
+    wprintf(L"Зчитаний текст:\n%ls\n", full_text);
+    free(full_text);
+
     // 1) number of monogram occurences sorted by descending
     
-    // monorams with spaces
-    monogram(full_text, true, dict);
-    //Dict_sort_by_desc(dict);
-    wprintf(L"Number of monogram occurences sorted by descending.\n");
-    //print_results(dict, true, MONOGRAM);
+    // // monorams with spaces
+    // monogram(full_text, true, dict);
+    // //Dict_sort_by_desc(dict);
+    // wprintf(L"Number of monogram occurences sorted by descending.\n");
+    // //print_results(dict, true, MONOGRAM);
 
-    // 2) number of bigram occurences - print as square matrix
-    // indexed by first and second letters of bigram
-    bigram(full_text, dict, true, 1);
-    wprintf(L"Number of bigram occurences sorted by descending.\n");
-    // Dict_sort_by_desc(dict);
-    print_results(dict, true, BIGRAM);
+    // // 2) number of bigram occurences - print as square matrix
+    // // indexed by first and second letters of bigram
+    // bigram(full_text, dict, true, 1);
+    // wprintf(L"Number of bigram occurences sorted by descending.\n");
+    // // Dict_sort_by_desc(dict);
+    // print_results(dict, true, BIGRAM);
     
     // print_bigram_table();
 
@@ -138,13 +90,12 @@ int main() {
     // 6) freq bigram table - print as square matrix
     // indexed by first and second letters of bigram
     
-    wprintf(L"Total characters read: %zu\n", total_chars_read);
-    wprintf(L"Аналіз повного тексту:\n\n");
+    // wprintf(L"Total characters read: %zu\n", total_chars_read);
+    // wprintf(L"Аналіз повного тексту:\n\n");
     
     
-    // Звільнення пам'яті
-    free(full_text);
-    Dict_destroy(dict);
+    // // Звільнення пам'яті
+    // Dict_destroy(dict);
     
     return 0;
 }

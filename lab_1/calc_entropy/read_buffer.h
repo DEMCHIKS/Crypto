@@ -7,6 +7,6 @@
 
 #define BUFFER_SIZE (1 * 1024)
 
-bool read_buffer_wide(FILE *file, wchar_t *buffer, size_t *chars_read);
+wchar_t *get_text_from_file(const char *filename);
 
 #endif // READ_BUFFER_H
