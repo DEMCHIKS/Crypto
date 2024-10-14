@@ -117,8 +117,6 @@ void print_monogram_seq(Dict *dict, wchar_t *alph, PrintType ptype) {
 
 }
 
-// }
-
 int main() {
     if (setlocale(LC_ALL, "ru_RU.utf8") == NULL) {
         fwprintf(stderr, L"Error: can't set locale\n");
@@ -214,17 +212,10 @@ int main() {
     // ====
     wprintf(L"\nFrequencies of monograms sorted by descendig with spaces: \n");
     print_monogram_seq(dict, ALPHABET, FREQ);
-    //print_results(dict, true, MONOGRAM);
 
     // FREQ monograms without spaces
     wprintf(L"Frequencies of monograms sorted by descendig without spaces: \n");
-<<<<<<< HEAD
-    print_results(dict, false, MONOGRAM);
-    // ====
-=======
     print_monogram_seq(dict, ALPHABET + 1, FREQ);
-    // print_results(dict, false, MONOGRAM);
->>>>>>> refs/remotes/origin/main
 
     // 6) freq bigram table - print as square matrix
     // indexed by first and second letters of bigram

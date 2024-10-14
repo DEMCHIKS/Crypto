@@ -23,6 +23,8 @@ void print_results(Dict *dict, bool include_spaces, TypeOfGram gram_type) {
         if (dentry.value > 0) {
 	        wprintf(L"Key: [%ls]; Value: [%d]\n", dentry.key, dentry.value);
         }
+
+        
     }
 }
 
