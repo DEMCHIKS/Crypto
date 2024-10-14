@@ -88,34 +88,63 @@ void print_bigram_table(Dict *dict, const wchar_t *alph, PrintType ptype) {
     }
 }
 
-void print_monogram_seq(Dict *dict, wchar_t *alph, PrintType ptype) {
-    bool include_space;
-    int i;
-    int alph_len;
-    wchar_t key[2];
-    int numb_of_occur, total_number;
+// void print_monogram_seq(Dict *dict, wchar_t *alph, PrintType ptype) {
+//     bool include_space;
+//     int i;
+//     int alph_len;
+//     wchar_t key[2];
+//     int numb_of_occur, total_number;
+//     float freq;
+
+//     key[1]= L'\0';
+//     include_space = wcschr(alph, L' ') != NULL;
+//     alph_len = wcslen(alph);
+//     total_number = Dict_calc_total(dict, MONOGRAM, include_space);
+
+
+//     for (i = 0; i < alph_len; ++i) {
+//         key[0] = alph[i];
+//         numb_of_occur = Dict_get_value(dict, &key[0]);
+
+//         if (ptype == OCCUR) {
+//             wprintf(L"[%lc] - %d\n", alph[i], numb_of_occur);
+//         } else if (ptype == FREQ) {
+//             freq = (float) numb_of_occur / total_number;
+//             wprintf(L"[%lc] - %.6f\n", alph[i], freq);
+//         }
+
+//     }
+
+// }
+
+// }
+
+void print_monogram_seq(Dict *dict, bool include_spaces, PrintType ptype) {
+    DictEntry dentry;
     float freq;
+    int total_number;
 
-    key[1]= L'\0';
-    include_space = wcschr(alph, L' ') != NULL;
-    alph_len = wcslen(alph);
-    total_number = Dict_calc_total(dict, MONOGRAM, include_space);
-
-
-    for (i = 0; i < alph_len; ++i) {
-        key[0] = alph[i];
-        numb_of_occur = Dict_get_value(dict, &key[0]);
-
-        if (ptype == OCCUR) {
-            wprintf(L"[%lc] - %d\n", alph[i], numb_of_occur);
-        } else if (ptype == FREQ) {
-            freq = (float) numb_of_occur / total_number;
-            wprintf(L"[%lc] - %.6f\n", alph[i], freq);
+    total_number = Dict_calc_total(dict, MONOGRAM, include_spaces);
+	for (int i = 0; i < dict->occupied; ++i) {
+        dentry = dict->dict_entries[i];
+        
+        if (wcslen(dentry.key) != 1) {
+        	continue;
         }
 
-    }
+        if (!include_spaces && (wcschr(dentry.key, L' ') != NULL)) {
+            continue;
+        }
 
+        if (ptype == OCCUR) {
+            wprintf(L"[%ls] - %d\n", dentry.key, dentry.value);
+        } else if (ptype == FREQ) {
+            freq = (float) dentry.value / total_number;
+            wprintf(L"[%ls] - %.6f\n", dentry.key, freq);
+        }
+    }
 }
+
 
 int main() {
     if (setlocale(LC_ALL, "ru_RU.utf8") == NULL) {
@@ -149,20 +178,19 @@ int main() {
     
     // monorams with spaces
     monogram(full_text, true, dict);
-    Dict_sort_by_desc(dict);
     wprintf(L"Number of monogram occurences sorted by descending with spaces.\n");
-    print_monogram_seq(dict, ALPHABET, OCCUR);
     Dict_sort_by_desc(dict);
+    print_monogram_seq(dict, true, OCCUR);
     //print_results(dict, true, MONOGRAM);
 
     // monogram without spaces
     wprintf(L"Number of monogram occurences sorted by descending without spaces.\n");
-    print_monogram_seq(dict, ALPHABET + 1, OCCUR);
     Dict_sort_by_desc(dict);
+    print_monogram_seq(dict, false, OCCUR);
     //print_results(dict, false, MONOGRAM);
 
     // 2) number of bigram occurences - print as square matrix
-    
+
     // =====================STEP 1========================(bigram)
     // indexed by first and second letters of bigram with spaces (step1)
     bigram(full_text, dict, true, 1);
@@ -212,14 +240,14 @@ int main() {
     // 5) freq monogram table sorted by descending
     // FREQ monograms with spaces
     // ====
+    // FREQ monograms with spaces
     wprintf(L"\nFrequencies of monograms sorted by descendig with spaces: \n");
-    print_monogram_seq(dict, ALPHABET, FREQ);
-    Dict_sort_by_desc(dict);
+    print_monogram_seq(dict, true, FREQ);
 
     // FREQ monograms without spaces
     wprintf(L"Frequencies of monograms sorted by descendig without spaces: \n");
-    print_monogram_seq(dict, ALPHABET + 1, FREQ);
-    Dict_sort_by_desc(dict);
+    print_monogram_seq(dict, false, FREQ);
+    // print_results(dict, false, MONOGRAM);
 
     // 6) freq bigram table - print as square matrix
     // indexed by first and second letters of bigram
