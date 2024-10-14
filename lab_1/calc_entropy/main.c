@@ -152,11 +152,13 @@ int main() {
     Dict_sort_by_desc(dict);
     wprintf(L"Number of monogram occurences sorted by descending with spaces.\n");
     print_monogram_seq(dict, ALPHABET, OCCUR);
+    Dict_sort_by_desc(dict);
     //print_results(dict, true, MONOGRAM);
 
     // monogram without spaces
     wprintf(L"Number of monogram occurences sorted by descending without spaces.\n");
     print_monogram_seq(dict, ALPHABET + 1, OCCUR);
+    Dict_sort_by_desc(dict);
     //print_results(dict, false, MONOGRAM);
 
     // 2) number of bigram occurences - print as square matrix
@@ -212,10 +214,12 @@ int main() {
     // ====
     wprintf(L"\nFrequencies of monograms sorted by descendig with spaces: \n");
     print_monogram_seq(dict, ALPHABET, FREQ);
+    Dict_sort_by_desc(dict);
 
     // FREQ monograms without spaces
     wprintf(L"Frequencies of monograms sorted by descendig without spaces: \n");
     print_monogram_seq(dict, ALPHABET + 1, FREQ);
+    Dict_sort_by_desc(dict);
 
     // 6) freq bigram table - print as square matrix
     // indexed by first and second letters of bigram
