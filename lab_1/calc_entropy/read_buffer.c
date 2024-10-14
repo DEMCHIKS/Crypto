@@ -51,11 +51,6 @@ static wchar_t* read_wide_file(FILE* file, size_t* total_chars_read) {
 }
 
 wchar_t* get_text_from_file(const char* filename) {
-    if (setlocale(LC_ALL, "ru_RU.utf8") == NULL) {
-        fwprintf(stderr, L"Error: can't set locale\n");
-        return NULL;
-    }
-
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
         fwprintf(stderr, L"Error: Cannot open file %s for reading.\n", filename);
