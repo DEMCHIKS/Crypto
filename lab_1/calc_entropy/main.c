@@ -86,7 +86,34 @@ void print_bigram_table(Dict *dict, const wchar_t *alph, PrintType ptype) {
         print_nwchars(L'-', form_str2_len * alph_len + form_str1_len);
         putwchar(L'\n');
     }
+}
 
+void print_monogram_seq(Dict *dict, wchar_t *alph, PrintType ptype) {
+    bool include_space;
+    int i;
+    int alph_len;
+    wchar_t key[2];
+    int numb_of_occur, total_number;
+    float freq;
+
+    key[1]= L'\0';
+    include_space = wcschr(alph, L' ') != NULL;
+    alph_len = wcslen(alph);
+    total_number = Dict_calc_total(dict, MONOGRAM, include_space);
+
+
+    for (i = 0; i < alph_len; ++i) {
+        key[0] = alph[i];
+        numb_of_occur = Dict_get_value(dict, &key[0]);
+
+        if (ptype == OCCUR) {
+            wprintf(L"[%lc] - %d\n", alph[i], numb_of_occur);
+        } else if (ptype == FREQ) {
+            freq = (float) numb_of_occur / total_number;
+            wprintf(L"[%lc] - %.6f\n", alph[i], freq);
+        }
+
+    }
 
 }
 
@@ -126,11 +153,13 @@ int main() {
     monogram(full_text, true, dict);
     Dict_sort_by_desc(dict);
     wprintf(L"Number of monogram occurences sorted by descending with spaces.\n");
-    print_results(dict, true, MONOGRAM);
+    print_monogram_seq(dict, ALPHABET, OCCUR);
+    //print_results(dict, true, MONOGRAM);
 
     // monogram without spaces
     wprintf(L"Number of monogram occurences sorted by descending without spaces.\n");
-    print_results(dict, false, MONOGRAM);
+    print_monogram_seq(dict, ALPHABET + 1, OCCUR);
+    //print_results(dict, false, MONOGRAM);
 
     // 2) number of bigram occurences - print as square matrix
     
@@ -184,12 +213,18 @@ int main() {
     // FREQ monograms with spaces
     // ====
     wprintf(L"\nFrequencies of monograms sorted by descendig with spaces: \n");
-    print_results(dict, true, MONOGRAM);
+    print_monogram_seq(dict, ALPHABET, FREQ);
+    //print_results(dict, true, MONOGRAM);
 
     // FREQ monograms without spaces
     wprintf(L"Frequencies of monograms sorted by descendig without spaces: \n");
+<<<<<<< HEAD
     print_results(dict, false, MONOGRAM);
     // ====
+=======
+    print_monogram_seq(dict, ALPHABET + 1, FREQ);
+    // print_results(dict, false, MONOGRAM);
+>>>>>>> refs/remotes/origin/main
 
     // 6) freq bigram table - print as square matrix
     // indexed by first and second letters of bigram
