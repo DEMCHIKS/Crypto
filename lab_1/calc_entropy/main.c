@@ -238,6 +238,7 @@ int main() {
 
     // 5) freq monogram table sorted by descending
     // FREQ monograms with spaces
+    // ====
     wprintf(L"\nFrequencies of monograms sorted by descendig with spaces: \n");
     print_monogram_seq(dict, true, FREQ);
     //print_results(dict, true, MONOGRAM);

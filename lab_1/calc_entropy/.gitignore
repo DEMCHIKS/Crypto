@@ -1,1 +1,2 @@
 .vscode
+calculateFREQ.o dict.o entropy.o filter_text.o main.o read_buffer.o
