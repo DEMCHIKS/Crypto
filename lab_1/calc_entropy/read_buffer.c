@@ -8,19 +8,19 @@
 #include <wctype.h>
 
 #define MAX_TEXT_SIZE 1000000  // 1 MB
-#define BUFFER_SIZE 1024 // 1 KB
+#define BUFFER_SIZE (1 * 1024) // 1 KB
 
 static wchar_t* read_wide_file(FILE* file, size_t* total_chars_read) {
     if (file == NULL || total_chars_read == NULL) {
         return NULL;
     }
 
-    wchar_t* buffer = malloc(sizeof(wchar_t) * INITIAL_BUFFER_SIZE);
+    wchar_t* buffer = malloc(sizeof(wchar_t) * BUFFER_SIZE);
     if (buffer == NULL) {
         return NULL;
     }
 
-    size_t buffer_size = INITIAL_BUFFER_SIZE;
+    size_t buffer_size = BUFFER_SIZE;
     *total_chars_read = 0;
 
     while (1) {
