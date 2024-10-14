@@ -41,12 +41,13 @@ void print_bigram_table(Dict *dict, const wchar_t *alph, PrintType ptype) {
     key[2] = L'\0';
     form_str_1 = L"l\\l|";
     form_str1_len = wcslen(form_str_1);
+    form_str_2 = L"";
 
     if (ptype == OCCUR) {
         form_str_2 = L"  %lc  |";
     } else if (ptype == FREQ) {
         form_str_2 = L"   %lc   |";
-    }
+    } 
 
     form_str2_len = wcslen(form_str_2) - 2;
     
@@ -97,9 +98,9 @@ int main() {
         return 1;
     }
 
-    Dict *dict;
+    Dict *dict, *dict2;
     dict = Dict_INIT(ALPHABET);
-
+    dict2 = Dict_INIT(ALPHABET);
 
     
     const char *input_file = "TEXT.txt";
@@ -119,50 +120,88 @@ int main() {
         return 1;
     }
 
-    // full_text = L"  есть тексты на русском языкезыкезыке";
-    // wprintf(L"Зчитаний текст:\n%ls\n", full_text);
-    // free(full_text);
-
     // 1) number of monogram occurences sorted by descending
     
     // monorams with spaces
     monogram(full_text, true, dict);
-    // Dict_sort_by_desc(dict);
-    wprintf(L"Number of monogram occurences sorted by descending.\n");
+    Dict_sort_by_desc(dict);
+    wprintf(L"Number of monogram occurences sorted by descending with spaces.\n");
     print_results(dict, true, MONOGRAM);
 
+    // monogram without spaces
+    wprintf(L"Number of monogram occurences sorted by descending without spaces.\n");
+    print_results(dict, false, MONOGRAM);
+
     // 2) number of bigram occurences - print as square matrix
-    // indexed by first and second letters of bigram
-    bigram(full_text, dict, true, 1);
-    wprintf(L"Number of bigram occurences sorted by descending.\n");
-<<<<<<< HEAD
-    Dict_sort_by_desc(dict);
-    print_results(dict, true, BIGRAM);
-=======
-    // Dict_sort_by_desc(dict);
-    // print_results(dict, true, BIGRAM);
->>>>>>> refs/remotes/origin/main
     
+    // =====================STEP 1========================(bigram)
+    // indexed by first and second letters of bigram with spaces (step1)
+    bigram(full_text, dict, true, 1);
+    wprintf(L"\nTable of bigram with spaces.\n");
     print_bigram_table(dict, ALPHABET, OCCUR);
-    print_bigram_table(dict, ALPHABET + 1, FREQ);
+ 
+    // indexed by first and second letters of bigram without spaces (step1)
+    wprintf(L"\nTable of bigram without spaces.\n");
+    print_bigram_table(dict, ALPHABET + 1, OCCUR);
 
 
-    // 3-1)  h1 for monogram without spaces
-    // 3-2)  h1 for monogram with space
+    // =====================STEP 2========================(bigram)
+    // indexed by first and second letters of bigram with spaces (step2)
+    bigram(full_text, dict2, true, 2);
+    wprintf(L"\nTable of bigram with spaces.\n");
+    print_bigram_table(dict2, ALPHABET, OCCUR);
+ 
+    // indexed by first and second letters of bigram without spaces (step2)
+    wprintf(L"\nTable of bigram without spaces.\n");
+    print_bigram_table(dict2, ALPHABET + 1, OCCUR);
 
-    // 4-1)  h2 for bigram without spaces (step 1)
-    // 4-2)  h2 for bigram with spaces (step 1)
-    // 4-3)  h2 for bigram without spaces (step 2)
-    // 4-4)  h2 for bigram with spaces (step 2)
-
+    // =====================ENTROPY=========================
+    // 3-1)  h1 for monogram with spaces
+    float entropy;
+    entropy = H1_monogram_with_SPACE(dict);
+    wprintf(L"\nEntropy for monograms with spaces: %f\n", entropy);
+    // 3-2)  h1 for monogram without space
+    entropy = H1_monogram_without_SPACE(dict);
+    wprintf(L"\nEntropy for monograms without spaces: %f\n", entropy);
+    
+    // 4-1)  h2 for bigram with spaces (step 1)
+    entropy = H2_bigram_with_SPACE(dict);
+    wprintf(L"\nEntropy for bigrams with spaces -- STEP_1: %f\n", entropy);
+    
+    // 4-2)  h2 for bigram without spaces (step 1)
+    entropy = H2_bigram_without_SPACE(dict);
+    wprintf(L"\nEntropy for bigrams without spaces -- STEP_1: %f\n", entropy);
+    
+    // 4-3)  h2 for bigram with spaces (step 2)
+    entropy = H2_bigram_with_SPACE(dict2);
+    wprintf(L"\nEntropy for bigrams with spaces -- STEP_2: %f\n", entropy);
+    
+    // 4-4)  h2 for bigram without spaces (step 2)
+    entropy = H2_bigram_without_SPACE(dict2);
+    wprintf(L"\nEntropy for bigrams without spaces -- STEP_2: %f\n", entropy);
 
     // 5) freq monogram table sorted by descending
+    // FREQ monograms with spaces
+    wprintf(L"\nFrequencies of monograms sorted by descendig with spaces: \n");
+    print_results(dict, true, MONOGRAM);
+
+    // FREQ monograms without spaces
+    wprintf(L"Frequencies of monograms sorted by descendig without spaces: \n");
+    print_results(dict, false, MONOGRAM);
+
     // 6) freq bigram table - print as square matrix
     // indexed by first and second letters of bigram
-    
-    // wprintf(L"Total characters read: %zu\n", total_chars_read);
-    // wprintf(L"Аналіз повного тексту:\n\n");
-    
+    wprintf(L"\nFrequencies bigrams table with spaces -- STEP - 1\n");
+    print_bigram_table(dict, ALPHABET, FREQ);
+
+    wprintf(L"\nFrequencies bigrams table without spaces -- STEP - 1\n");
+    print_bigram_table(dict, ALPHABET + 1, FREQ);
+
+    wprintf(L"\nFrequencies bigrams table with spaces -- STEP - 2\n");
+    print_bigram_table(dict2, ALPHABET, FREQ);
+
+    wprintf(L"\nFrequencies bigrams table without spaces -- STEP - 2\n");
+    print_bigram_table(dict2, ALPHABET + 1, FREQ);
     
     Dict_destroy(dict);
     
