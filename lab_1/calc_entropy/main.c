@@ -18,8 +18,6 @@ wchar_t ALPHABET[] = L" абвгдежзийклмнопрстуфхцчшщыь
 int main() {
     Dict *dict;
     dict = Dict_INIT(ALPHABET);
-    // wchar_t key[3];
-    // key[2] = L'\0';
 
     Dict_sort_by_desc(dict);
     print_results(dict, true, ALL);
@@ -34,7 +32,6 @@ int main() {
     }
 
     // Читання тексту частинами по 1 кілобайту
-    
     wchar_t *full_text = get_text_from_file(filtered_file);
     if (full_text == NULL) {
 
@@ -58,7 +55,7 @@ int main() {
     // indexed by first and second letters of bigram
     bigram(full_text, dict, true, 1);
     wprintf(L"Number of bigram occurences sorted by descending.\n");
-    // Dict_sort_by_desc(dict);
+    Dict_sort_by_desc(dict);
     print_results(dict, true, BIGRAM);
     
     // print_bigram_table();

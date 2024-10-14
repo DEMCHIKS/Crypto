@@ -17,4 +17,4 @@ $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -c $<
 
 clean:
-	rm -f $(OBJS) $(TARGET) #filter_text entropy_calculator
+	rm -f $(OBJS) $(TARGET) 
